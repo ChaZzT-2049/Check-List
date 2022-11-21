@@ -49,7 +49,7 @@
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  {{ user.email }}
+                  {{ user.username }}
                 </button>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="#">Perfil</a></li>
@@ -148,7 +148,7 @@
               <label class="form-label">Usuario</label>
               <div class="form-floating">
                 <input
-                  v-model="form.email"
+                  v-model="form.username"
                   type="text"
                   class="form-control"
                   id="username"
@@ -165,7 +165,7 @@
               <div class="form-floating">
                 <input
                   v-model="form.password"
-                  type="text"
+                  type="password"
                   class="form-control"
                   id="password"
                   placeholder="password"
@@ -188,15 +188,15 @@ export default {
   data: () => ({
     user: {},
     form: {
-      email: "",
+      username: "",
       password: "",
     },
   }),
   methods: {
     login() {
-      console.log("xd", this.form);
-      this.user.email = this.form.email;
-      this.user.password = this.form.password;
+      console.log(this.user);
+      console.log(this.form);
+      this.user = this.form;
     },
   },
 };

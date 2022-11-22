@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div v-show="user.email != null">
+    <div v-show="user">
       <!--Navbar-->
       <nav class="sticky-top navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
@@ -127,7 +127,7 @@
       <router-view />
     </div>
     <div
-      v-show="user.email == null"
+      v-show="user"
       style="padding: 20px; margin-bottom: 80px; max-width: 500px"
       class="container-fluid mh-100"
     >
@@ -149,14 +149,14 @@
               <label class="form-label">Correo</label>
               <div class="form-floating">
                 <input
-                  v-model="form.email"
-                  type="email"
+                  v-model="form.username"
+                  type="text"
                   class="form-control"
-                  id="email"
-                  placeholder="email"
+                  id="username"
+                  placeholder="username"
                   autocomplete="off"
                 />
-                <label class="text-muted" for="email"
+                <label class="text-muted" for="username"
                   ><small>Escribir Email</small></label
                 >
               </div>
@@ -192,21 +192,19 @@ export default {
   data: () => ({
     user: {},
     form: {
-      email: "chazz@gmail.com",
-      password: "12345678910",
+      username: "sroot",
+      password: "12345678"
     },
   }),
   methods: {
     login() {
-      axios.get("sanctum/csrf-cookie").then(() => {
-        axios.post("api/login", this.form).then((res) => {
-          console.log(res.data.user);
+      axios.post("api/loginapp", this.form).then((res) => {
+        console.log(res.data.user);
+        console.log(res.data.message);
+        this.user = res.data.user;
+        if (res.data.error == true) {
           console.log(res.data.message);
-          this.user = res.data.user;
-          if (res.data.error == true) {
-            console.log(res.data.message);
-          }
-        });
+        }
       });
     },
   },

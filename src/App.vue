@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div>
+    <div v-show="user.email != null">
       <!--Navbar-->
       <nav class="sticky-top navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
@@ -49,7 +49,7 @@
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  {{ user.username }}
+                  {{ user.name }}
                 </button>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="#">Perfil</a></li>
@@ -127,6 +127,7 @@
       <router-view />
     </div>
     <div
+      v-show="user.email == null"
       style="padding: 20px; margin-bottom: 80px; max-width: 500px"
       class="container-fluid mh-100"
     >
@@ -145,18 +146,18 @@
         <div class="card-body">
           <form @submit.prevent="login">
             <div class="mb-3 text-start">
-              <label class="form-label">Usuario</label>
+              <label class="form-label">Correo</label>
               <div class="form-floating">
                 <input
-                  v-model="form.username"
-                  type="text"
+                  v-model="form.email"
+                  type="email"
                   class="form-control"
-                  id="username"
-                  placeholder="username"
+                  id="email"
+                  placeholder="email"
                   autocomplete="off"
                 />
-                <label class="text-muted" for="username"
-                  ><small>Escribir Nombre de Usuario</small></label
+                <label class="text-muted" for="email"
+                  ><small>Escribir Email</small></label
                 >
               </div>
             </div>
@@ -171,7 +172,7 @@
                   placeholder="password"
                   autocomplete="off"
                 />
-                <label class="text-muted" for="username"
+                <label class="text-muted" for="password"
                   ><small>Escribir Contraseña</small></label
                 >
               </div>
@@ -184,19 +185,29 @@
   </div>
 </template>
 <script>
+import axios from "axios";
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = "http://127.0.0.1:8000/";
 export default {
   data: () => ({
     user: {},
     form: {
-      username: "",
-      password: "",
+      email: "chazz@gmail.com",
+      password: "12345678910",
     },
   }),
   methods: {
     login() {
-      console.log(this.user);
-      console.log(this.form);
-      this.user = this.form;
+      axios.get("sanctum/csrf-cookie").then(() => {
+        axios.post("api/login", this.form).then((res) => {
+          console.log(res.data.user);
+          console.log(res.data.message);
+          this.user = res.data.user;
+          if (res.data.error == true) {
+            console.log(res.data.message);
+          }
+        });
+      });
     },
   },
 };

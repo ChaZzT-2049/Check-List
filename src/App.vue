@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div v-show="user">
+    <div v-show="user == {}">
       <!--Navbar-->
       <nav class="sticky-top navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
@@ -49,7 +49,7 @@
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  {{ user.name }}
+                  {{ user.username }}
                 </button>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="#">Perfil</a></li>
@@ -127,7 +127,7 @@
       <router-view />
     </div>
     <div
-      v-show="user"
+      v-show="user != {}"
       style="padding: 20px; margin-bottom: 80px; max-width: 500px"
       class="container-fluid mh-100"
     >
@@ -187,21 +187,21 @@
 <script>
 import axios from "axios";
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://127.0.0.1:8000/";
+axios.defaults.baseURL = "http://127.0.0.1/";
 export default {
   data: () => ({
     user: {},
     form: {
       username: "sroot",
-      password: "12345678"
+      password: "12345678",
     },
   }),
   methods: {
     login() {
-      axios.post("api/loginapp", this.form).then((res) => {
-        console.log(res.data.user);
+      axios.get("api/loginapp", this.form).then((res) => {
+        //console.log(res.data.user);
         console.log(res.data.message);
-        this.user = res.data.user;
+        //this.user = res.data.user;
         if (res.data.error == true) {
           console.log(res.data.message);
         }

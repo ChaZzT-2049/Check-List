@@ -54,7 +54,9 @@
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="#">Perfil</a></li>
                   <li><hr class="dropdown-divider" /></li>
-                  <li><a class="dropdown-item" href="#">Cerrar Sesion</a></li>
+                  <li>
+                    <a class="dropdown-item" @click="logout">Cerrar Sesion</a>
+                  </li>
                 </ul>
               </div>
             </div>
@@ -207,6 +209,12 @@ export default {
           console.log(res.data.message);
           this.user = res.data.user;
         }
+      });
+    },
+    logout() {
+      axios.post("api/logoutapp").then((res) => {
+        console.log(res.data.message);
+        this.user = res.data.user;
       });
     },
   },

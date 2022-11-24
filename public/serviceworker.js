@@ -1,11 +1,11 @@
 const CACHE_NAME = 'v1_cache_checklist',
 urlsToCache = [
-    './',
-    './index.html',
-    './favicon.ico',
-    './script.js',
-    './img/icons/android-icon-192x192.png',
-    './img/icons/apple-icon.png'
+    '/',
+    'index.html',
+    'favicon.ico',
+    'script.js',
+    'img/icons/android-icon-192x192.png',
+    'img/icons/apple-icon.png'
 ]
 
 self.addEventListener('install', event =>{

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div v-show="user.username != null">
+    <div v-if="user.username != null">
       <!--Navbar-->
       <nav class="sticky-top navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
@@ -129,7 +129,7 @@
       <router-view />
     </div>
     <div
-      v-show="user.username == null"
+      v-else
       style="padding: 20px; margin-bottom: 80px; max-width: 500px"
       class="container-fluid mh-100"
     >
@@ -205,7 +205,7 @@ export default {
           console.log(res.data.message);
           console.log(res.data.msj);
         } else {
-          console.log(res.data.user);
+          //console.log(res.data.user);
           console.log(res.data.message);
           this.user = res.data.user;
         }

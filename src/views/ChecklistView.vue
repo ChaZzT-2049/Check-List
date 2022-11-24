@@ -309,7 +309,7 @@
                           <label class="form-label">Turno</label>
                           <select
                             class="form-select"
-                            id="turno"
+                            id="turno1"
                             aria-label="Disabled select example"
                             disabled
                           >
@@ -369,7 +369,7 @@
                             <textarea
                               class="form-control"
                               placeholder="Leave a comment here"
-                              id="observaciones"
+                              id="observaciones1"
                               style="height: 100px"
                             ></textarea>
                             <label class="text-muted" for="observaciones"
@@ -395,7 +395,7 @@
                           <label class="form-label">Turno</label>
                           <select
                             class="form-select"
-                            id="turno"
+                            id="turno4"
                             aria-label="Disabled select example"
                             disabled
                           >
@@ -455,7 +455,7 @@
                             <textarea
                               class="form-control"
                               placeholder="Leave a comment here"
-                              id="observaciones"
+                              id="observaciones2"
                               style="height: 100px"
                             ></textarea>
                             <label class="text-muted" for="observaciones"
@@ -481,7 +481,7 @@
                           <label class="form-label">Turno</label>
                           <select
                             class="form-select"
-                            id="turno"
+                            id="turno3"
                             aria-label="Disabled select example"
                             disabled
                           >
@@ -541,7 +541,7 @@
                             <textarea
                               class="form-control"
                               placeholder="Leave a comment here"
-                              id="observaciones"
+                              id="observaciones3"
                               style="height: 100px"
                             ></textarea>
                             <label class="text-muted" for="observaciones"

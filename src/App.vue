@@ -49,11 +49,9 @@
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  {{ user.username }}
+                  {{ user.nombre_completo }}
                 </button>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Perfil</a></li>
-                  <li><hr class="dropdown-divider" /></li>
                   <li>
                     <a class="dropdown-item" @click="logout">Cerrar Sesion</a>
                   </li>
@@ -96,7 +94,7 @@
                 data-bs-dismiss="offcanvas"
               >
                 <h5 class="mb-1">Home</h5>
-                <small>ORP</small>
+                <small>{{ user.hotel.siglas }}</small>
               </div>
             </router-link>
             <router-link
@@ -112,14 +110,14 @@
               </div>
             </router-link>
             <router-link
-              to="/login"
+              to="/edit"
               class="list-group-item list-group-item-action"
             >
               <div
                 class="d-flex w-100 justify-content-between"
                 data-bs-dismiss="offcanvas"
               >
-                <h5 class="mb-1">Estadisticas</h5>
+                <h5 class="mb-1">Editar Chequeo</h5>
               </div>
             </router-link>
           </div>

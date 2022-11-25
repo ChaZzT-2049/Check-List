@@ -144,9 +144,13 @@
           <h1>Iniciar Sesion</h1>
         </div>
         <div class="card-body">
+          <h5 class="text-danger">{{ titulo }}</h5>
+          <div v-for="input in inputs" :key="input">
+            <b class="text-danger">{{ input }}</b> <br />
+          </div>
           <form @submit.prevent="login">
             <div class="mb-3 text-start">
-              <label class="form-label">Correo</label>
+              <label class="form-label">Usuario</label>
               <div class="form-floating">
                 <input
                   v-model="form.username"
@@ -190,6 +194,8 @@ axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://127.0.0.1/";
 export default {
   data: () => ({
+    titulo: "",
+    inputs: "",
     user: {},
     form: {
       username: "sroot",
@@ -200,11 +206,16 @@ export default {
     login() {
       axios.post("api/loginapp", this.form).then((res) => {
         if (res.data.error == true) {
-          console.log(res.data.message);
-          console.log(res.data.msj);
-        } else {
-          //console.log(res.data.user);
-          console.log(res.data.message);
+          this.titulo = res.data.titulo;
+          this.inputs = res.data.message;
+        }
+        if (res.data.existe == false) {
+          this.titulo = res.data.message;
+        }
+        if (res.data.correct == false) {
+          this.titulo = res.data.message;
+        }
+        if (res.data.login == true) {
           this.user = res.data.user;
         }
       });

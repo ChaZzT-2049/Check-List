@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div v-if="user.username != null">
+    <div v-if="$store.state.auth">
       <!--Navbar-->
       <nav class="sticky-top navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
@@ -44,12 +44,13 @@
             <div class="d-flex" style="padding-right: 50px">
               <div class="dropdown">
                 <button
+                  v-if="$store.state.auth"
                   class="btn btn-primary dropdown-toggle"
                   type="button"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  {{ user.nombre_completo }}
+                  {{ $store.state.user.nombre_completo }}
                 </button>
                 <ul class="dropdown-menu">
                   <li>
@@ -94,7 +95,9 @@
                 data-bs-dismiss="offcanvas"
               >
                 <h5 class="mb-1">Home</h5>
-                <small>{{ user.hotel.siglas }}</small>
+                <small v-if="$store.state.auth">{{
+                  $store.state.user.hotel.siglas
+                }}</small>
               </div>
             </router-link>
             <router-link
@@ -144,9 +147,11 @@
           <h1>Iniciar Sesion</h1>
         </div>
         <div class="card-body">
-          <h5 class="text-danger">{{ titulo }}</h5>
+          <h5 class="text-danger">{{ $store.state.titulo }}</h5>
           <div class="text-start">
-            <strong class="text-danger text-start">{{ inputs }}</strong>
+            <strong class="text-danger text-start">{{
+              $store.state.inputs
+            }}</strong>
           </div>
           <form @submit.prevent="login">
             <div class="mb-3 text-start">
@@ -189,14 +194,8 @@
   </div>
 </template>
 <script>
-import axios from "axios";
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://127.0.0.1/";
 export default {
   data: () => ({
-    titulo: "",
-    inputs: "",
-    user: {},
     form: {
       username: "sroot",
       password: "12345678",
@@ -204,27 +203,14 @@ export default {
   }),
   methods: {
     login() {
-      axios.post("api/loginapp", this.form).then((res) => {
-        if (res.data.error == true) {
-          this.titulo = res.data.titulo;
-          this.inputs = res.data.message;
-        }
-        if (res.data.existe == false) {
-          this.titulo = res.data.message;
-        }
-        if (res.data.correct == false) {
-          this.titulo = res.data.message;
-        }
-        if (res.data.login == true) {
-          this.user = res.data.user;
-        }
-      });
+      console.log(this.form);
+      this.$store.dispatch("login", this.form);
     },
     logout() {
-      axios.post("api/logoutapp").then((res) => {
-        console.log(res.data.message);
-        this.user = res.data.user;
-      });
+      //axios.post("api/logoutapp").then((res) => {
+      //  console.log(res.data.message);
+      //  this.user = res.data.user;
+      //});
     },
   },
 };

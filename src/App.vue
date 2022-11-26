@@ -145,8 +145,8 @@
         </div>
         <div class="card-body">
           <h5 class="text-danger">{{ titulo }}</h5>
-          <div v-for="input in inputs" :key="input">
-            <b class="text-danger">{{ input }}</b> <br />
+          <div class="text-start">
+            <strong class="text-danger text-start">{{ inputs }}</strong>
           </div>
           <form @submit.prevent="login">
             <div class="mb-3 text-start">

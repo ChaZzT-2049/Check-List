@@ -5,19 +5,29 @@
   >
     <div class="card text-center">
       <div class="card-header">
-        <h1>Check List 21/11/2022</h1>
+        <h1>Check List</h1>
       </div>
       <div class="card-body">
-        <div class="text-start">
-          <button
-            type="button"
-            class="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
-          >
-            Realizar Check List
-          </button>
+        <div class="mx-auto text-center" style="max-width: 800px">
+          <form>
+            <div class="mb-3 text-start">
+              <label class="form-label">Hotel</label>
+              <select class="form-select" id="hotel" aria-label="hotel">
+                <option value="1">Matutino</option>
+                <option value="2">Vespertino</option>
+              </select>
+            </div>
+          </form>
         </div>
+        <hr />
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-toggle="modal"
+          data-bs-target="#exampleModal"
+        >
+          Realizar Check List
+        </button>
         <hr />
         <div class="bg-primary"><h2 class="text-light">Matutino</h2></div>
         <hr />

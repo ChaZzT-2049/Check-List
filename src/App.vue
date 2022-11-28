@@ -54,7 +54,11 @@
                 </button>
                 <ul class="dropdown-menu">
                   <li>
-                    <a class="dropdown-item" @click="logout">Cerrar Sesion</a>
+                    <a class="dropdown-item" @click="logout">{{
+                      $store.state.lang.prefijo == "es"
+                        ? "Cerrar Sesión"
+                        : "Logout"
+                    }}</a>
                   </li>
                 </ul>
               </div>
@@ -73,7 +77,8 @@
       >
         <div class="offcanvas-header text-bg-primary p-3">
           <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">
-            Check List Sistemas
+            Check List
+            {{ $store.state.lang.prefijo == "es" ? " Sistemas" : " Systems" }}
           </h5>
           <button
             type="button"
@@ -109,7 +114,7 @@
                 data-bs-dismiss="offcanvas"
               >
                 <h5 class="mb-1">Check List</h5>
-                <small class="text-muted">2022-11-16</small>
+                <small class="text-muted">{{ $store.state.hoy }}</small>
               </div>
             </router-link>
             <router-link
@@ -120,7 +125,13 @@
                 class="d-flex w-100 justify-content-between"
                 data-bs-dismiss="offcanvas"
               >
-                <h5 class="mb-1">Editar Chequeo</h5>
+                <h5 class="mb-1">
+                  {{
+                    $store.state.lang.prefijo == "es"
+                      ? "Editar Check List"
+                      : "Edit Check List"
+                  }}
+                </h5>
               </div>
             </router-link>
           </div>
@@ -140,11 +151,19 @@
           src="https://res.cloudinary.com/itermotus/q_auto,h_45,dpr_2.0/assets/oceanhotels/logo.svg"
           alt="Ocean by H10"
         />
-        <h1 class="text-primary">Sistemas Check List</h1>
+        <h1 class="text-primary">
+          {{
+            $store.state.lang.prefijo == "es"
+              ? "Sistemas Check List"
+              : "Check List Systems"
+          }}
+        </h1>
       </div>
       <div class="card text-center">
         <div class="card-header bg-primary text-light">
-          <h1>Iniciar Sesion</h1>
+          <h1>
+            {{ $store.state.lang.prefijo == "es" ? "Iniciar Sesión" : "Login" }}
+          </h1>
         </div>
         <div class="card-body">
           <h5 class="text-danger">{{ $store.state.titulo }}</h5>
@@ -155,10 +174,12 @@
           </div>
           <form @submit.prevent="login">
             <div class="mb-3 text-start">
-              <label class="form-label">Usuario</label>
+              <label class="form-label">{{
+                $store.state.lang.prefijo == "es" ? "Usuario" : "User"
+              }}</label>
               <div class="form-floating">
                 <input
-                  v-model="form.username"
+                  v-model="username"
                   type="text"
                   class="form-control"
                   id="username"
@@ -166,15 +187,21 @@
                   autocomplete="off"
                 />
                 <label class="text-muted" for="username"
-                  ><small>Escribir Email</small></label
+                  ><small>{{
+                    $store.state.lang.prefijo == "es"
+                      ? "Escribir Usuario"
+                      : "Write User"
+                  }}</small></label
                 >
               </div>
             </div>
             <div class="mb-3 text-start">
-              <label class="form-label">Contraseña</label>
+              <label class="form-label">{{
+                $store.state.lang.prefijo == "es" ? "Contraseña" : "Password"
+              }}</label>
               <div class="form-floating">
                 <input
-                  v-model="form.password"
+                  v-model="password"
                   type="password"
                   class="form-control"
                   id="password"
@@ -182,7 +209,11 @@
                   autocomplete="off"
                 />
                 <label class="text-muted" for="password"
-                  ><small>Escribir Contraseña</small></label
+                  ><small>{{
+                    $store.state.lang.prefijo == "es"
+                      ? "Escribir Contraseña"
+                      : "Write Password"
+                  }}</small></label
                 >
               </div>
             </div>
@@ -196,21 +227,18 @@
 <script>
 export default {
   data: () => ({
-    form: {
-      username: "sroot",
-      password: "12345678",
-    },
+    username: "sroot",
+    password: "12345678",
   }),
   methods: {
     login() {
-      console.log(this.form);
-      this.$store.dispatch("login", this.form);
+      this.$store.dispatch("login", {
+        username: this.username,
+        password: this.password,
+      });
     },
     logout() {
-      //axios.post("api/logoutapp").then((res) => {
-      //  console.log(res.data.message);
-      //  this.user = res.data.user;
-      //});
+      this.$store.dispatch("logout");
     },
   },
 };

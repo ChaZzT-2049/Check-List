@@ -10,9 +10,12 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     user: null,
+    lang: { prefijo: "es" },
+    hoy: "",
     auth: false,
     titulo: "",
     inputs: "",
+    api_key: "key_cur_prod_Cr9NqVEqoQKhxDVtwEPT4xsUExgEV4vae",
   },
   getters: {},
   mutations: {
@@ -20,15 +23,20 @@ export default new Vuex.Store({
       state.user = user;
       state.auth = Boolean(user);
     },
+    SET_LANG(state, lang) {
+      state.lang = lang;
+    },
+    SET_DATE(state, hoy) {
+      state.hoy = hoy;
+    },
     SET_ERRORS(state, errors) {
       state.titulo = errors.titulo;
       state.inputs = errors.message;
     },
   },
   actions: {
-    login(credentials) {
-      console.log(credentials);
-      axios.post("api/loginapp", credentials).then((res) => {
+    login(username, password) {
+      axios.post("api/loginapp", password).then((res) => {
         if (res.data.error == true) {
           this.commit("SET_ERRORS", res.data);
           this.commit("SET_USER", null);
@@ -43,7 +51,15 @@ export default new Vuex.Store({
         }
         if (res.data.login == true) {
           this.commit("SET_USER", res.data.user);
+          this.commit("SET_LANG", res.data.lang);
+          this.commit("SET_DATE", res.data.hoy);
         }
+      });
+    },
+    logout() {
+      axios.post("api/logoutapp").then((res) => {
+        console.log(res.data.message);
+        this.commit("SET_USER", null);
       });
     },
   },

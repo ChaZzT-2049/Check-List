@@ -19,16 +19,29 @@
             <img
               class="card-img-top"
               style="max-width: 400px"
-              src="https://www.celebritrip.com/images/bodas_cancun_riviera/OCEAN_RIVIERA_PARADISE_LOGO(1).png"
+              :src="
+                'http://127.0.0.1/storage/app/public/' +
+                $store.state.user.hotel.logo
+              "
               alt="Ocean by H10"
             />
             <hr />
-            <h3 class="card-title">Ocean Riviera Paradise</h3>
-            <p class="card-text">ORP <br />Playa del Carmen</p>
+            <h3 class="card-title">{{ $store.state.user.hotel.nombre }}</h3>
+            <p class="card-text">
+              {{ $store.state.user.hotel.siglas }} <br />{{
+                $store.state.user.hotel.direccion
+              }}
+            </p>
           </div>
         </div>
         <div class="card text-start">
-          <h4 class="card-header bg-primary text-light">Check List ORP</h4>
+          <h4 class="card-header bg-primary text-light">
+            {{
+              $store.state.lang.prefijo == "es"
+                ? $store.state.user.hotel.siglas + "Check List Hoy "
+                : $store.state.user.hotel.siglas + " Today Check List"
+            }}
+          </h4>
           <div
             class="card-body"
             style="padding-left: 12px; padding-top: 0px; padding-bottom: 0px"
@@ -36,27 +49,58 @@
             <div class="row">
               <div
                 class="col-6 text-center border-end border-2"
-                style="padding-top: 12px; padding-bottom: 12px"
+                style="
+                  padding-top: 12px;
+                  padding-bottom: 12;
+                  padding-right: 5px;
+                  padding-left: 5px;
+                "
               >
                 <img
                   src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOCAE382KD8n6GvWWl72LzQLGbmoT8rTBPHw&usqp=CAU"
                   class="img-fluid rounded-center"
                   alt="Checklist"
                 />
+                <p class="card-text">
+                  {{
+                    $store.state.lang.prefijo == "es"
+                      ? "Actualizado el: "
+                      : "Updated at: "
+                  }}<br />
+                  <small class="text-muted">{{ ultimo.created_at }}</small>
+                </p>
               </div>
               <div class="col-6">
                 <p class="card-text">
-                  <b>Actividades: </b>10<br /><b>Realizadas: </b>5<br /><b
-                    >Estado: </b
-                  >50%
+                  <b>{{
+                    $store.state.lang.prefijo == "es"
+                      ? "Actividades: "
+                      : "Activities: "
+                  }}</b
+                  >{{ actividades }}<br /><b>{{
+                    $store.state.lang.prefijo == "es"
+                      ? "Realizadas: "
+                      : "Performed: "
+                  }}</b
+                  >{{ hotelchecklist }}<br /><b>{{
+                    $store.state.lang.prefijo == "es" ? "Estado: " : "Status: "
+                  }}</b
+                  >{{ porcentaje }}%
                 </p>
                 <p class="card-text">
-                  OK: <b class="text-success">2</b><br />
-                  Fallando: <b class="text-danger">2</b><br />
-                  No Completado: <b>1</b>
-                </p>
-                <p class="card-text">
-                  <small class="text-muted">Last updated 3 mins ago</small>
+                  OK: <b class="text-success">{{ ok }}</b
+                  ><br />
+                  {{
+                    $store.state.lang.prefijo == "es"
+                      ? "Fallando: "
+                      : "Failing: "
+                  }}<b class="text-danger">{{ fallando }}</b
+                  ><br />
+                  {{
+                    $store.state.lang.prefijo == "es"
+                      ? "No Completado: "
+                      : "Not Completed: "
+                  }}<b>{{ nocompletado }}</b>
                 </p>
               </div>
             </div>
@@ -70,7 +114,11 @@
                   type="button"
                   class="btn btn-primary"
                 >
-                  Ver Check List
+                  {{
+                    $store.state.lang.prefijo == "es"
+                      ? "Ver Check List"
+                      : "See Check List"
+                  }}
                 </router-link>
               </div>
             </div>
@@ -81,11 +129,18 @@
           style="margin-top: 10px; margin-bottom: 10px"
         >
           <div class="card header bg-primary text-light">
-            <h4>Usuario</h4>
+            <h4>
+              {{ $store.state.lang.prefijo == "es" ? "Usuario" : "User" }}
+            </h4>
           </div>
           <div class="card-body">
-            <h5 class="card-title">Carlos Eduardo Cortes Fernandez</h5>
-            <p class="card-text">ORP <br />Sistemas <br />Coordinador</p>
+            <h5 class="card-title">{{ $store.state.user.nombre_completo }}</h5>
+            <p class="card-text">
+              {{ $store.state.user.hotel.siglas }} <br />{{
+                $store.state.user.puestos.departamento.nombre
+              }}
+              <br />{{ $store.state.user.puestos.nombre }}
+            </p>
           </div>
         </div>
       </div>
@@ -94,5 +149,36 @@
 </template>
 
 <script>
-// @ is an alias to /src
+import axios from "axios";
+export default {
+  data: () => ({
+    actividades: "",
+    hotelchecklist: "",
+    porcentaje: "",
+    ok: "",
+    fallando: "",
+    nocompletado: "",
+    ultimo: "",
+  }),
+  mounted: function () {
+    this.checklistStatus();
+  },
+  methods: {
+    checklistStatus() {
+      axios
+        .post("api/checklistuser?api_key=" + this.$store.state.api_key, {
+          id: this.$store.state.user.hotel.id,
+        })
+        .then((res) => {
+          this.actividades = res.data.hotelitems;
+          this.hotelchecklist = res.data.hotelchecklist;
+          this.porcentaje = res.data.porcentaje;
+          this.ok = res.data.ok;
+          this.fallando = res.data.fallando;
+          this.nocompletado = res.data.nocompletado;
+          this.ultimo = res.data.ultimo;
+        });
+    },
+  },
+};
 </script>

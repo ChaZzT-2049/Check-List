@@ -3,7 +3,7 @@ import Vue from "vue";
 
 import axios from "axios";
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://127.0.0.1/";
+axios.defaults.baseURL = "http://127.0.0.1/api/";
 
 Vue.use(Vuex);
 
@@ -36,7 +36,7 @@ export default new Vuex.Store({
   },
   actions: {
     login(username, password) {
-      axios.post("api/loginapp", password).then((res) => {
+      axios.post("loginapp", password).then((res) => {
         if (res.data.error == true) {
           this.commit("SET_ERRORS", res.data);
           this.commit("SET_USER", null);
@@ -57,7 +57,7 @@ export default new Vuex.Store({
       });
     },
     logout() {
-      axios.post("api/logoutapp").then((res) => {
+      axios.post("logoutapp").then((res) => {
         console.log(res.data.message);
         this.commit("SET_USER", null);
       });

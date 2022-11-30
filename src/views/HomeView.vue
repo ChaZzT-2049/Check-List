@@ -38,7 +38,7 @@
           <h4 class="card-header bg-primary text-light">
             {{
               $store.state.lang.prefijo == "es"
-                ? $store.state.user.hotel.siglas + "Check List Hoy "
+                ? $store.state.user.hotel.siglas + " Check List Hoy "
                 : $store.state.user.hotel.siglas + " Today Check List"
             }}
           </h4>
@@ -166,7 +166,7 @@ export default {
   methods: {
     checklistStatus() {
       axios
-        .post("api/checklistuser?api_key=" + this.$store.state.api_key, {
+        .post("checklistuser?api_key=" + this.$store.state.api_key, {
           id: this.$store.state.user.hotel.id,
         })
         .then((res) => {

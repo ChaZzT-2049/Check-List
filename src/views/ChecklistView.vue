@@ -85,7 +85,7 @@
                   />
                 </div>
               </form>
-              <h4 class="card-title">{{ fecha }}</h4>
+              <h4 class="card-title">Chequeos Realizados el {{ fecha }}</h4>
               <hr />
               <div class="bg-primary"><h2 class="text-light">Matutino</h2></div>
               <hr />
@@ -403,7 +403,7 @@ export default {
   methods: {
     getHoteles() {
       axios
-        .get("api/getHoteles?api_key=" + this.$store.state.api_key)
+        .get("getHoteles?api_key=" + this.$store.state.api_key)
         .then((res) => {
           this.hoteles = res.data.hoteles;
           this.fecha = this.$store.state.hoy;
@@ -413,13 +413,17 @@ export default {
       if (this.filtroHotel == undefined) {
         document.getElementById("componente").style.display = "none";
       } else {
+        this.hoteles.forEach((element) => {
+          if (element.id == this.filtroHotel) {
+            this.Hotelselected = element;
+          }
+        });
         axios
-          .post("api/getItems?api_key=" + this.$store.state.api_key, {
+          .post("getItems?api_key=" + this.$store.state.api_key, {
             id: id,
           })
           .then((res) => {
             this.items = res.data.items;
-            this.Hotelselected = res.data.hotel;
             this.getChecklist();
           });
         document.getElementById("componente").style.display = "inline";
@@ -427,7 +431,7 @@ export default {
     },
     getChecklist() {
       axios
-        .post("api/getChecklist?api_key=" + this.$store.state.api_key, {
+        .post("getChecklist?api_key=" + this.$store.state.api_key, {
           id: this.Hotelselected.id,
           fecha: this.fecha,
         })

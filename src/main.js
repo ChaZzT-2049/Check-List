@@ -4,6 +4,11 @@ import "./registerServiceWorker";
 import router from "./router";
 import store from "./store";
 
+// Importamos JQuery
+const $ = require("jquery");
+// Lo declaramos globalmente
+window.$ = $;
+
 Vue.config.productionTip = false;
 
 new Vue({

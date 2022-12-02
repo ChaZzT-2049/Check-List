@@ -249,7 +249,7 @@
                       <b class="card-title text-muted">{{
                         item.descripcion
                       }}</b>
-                      <form>
+                      <form enctype="multipart/form-data">
                         <div class="mb-3 text-start">
                           <label class="form-label">Turno</label>
                           <div class="form-floating">
@@ -324,6 +324,26 @@
                           </div>
                         </div>
                         <div class="mb-3 text-start">
+                          <label for="evidencia" class="form-label"
+                            >Añade una imagen de evidencia</label
+                          >
+                          <input
+                            @change="mostrarImg()"
+                            class="form-control"
+                            accept="image/*"
+                            capture="evidencia"
+                            type="file"
+                            :id="'evidencia' + item.id"
+                          />
+                          <div class="text-center">
+                            <img
+                              style="max-width: 200px; padding: 10px"
+                              :id="'imagen' + item.id"
+                              class="imagen"
+                            />
+                          </div>
+                        </div>
+                        <div class="mb-3 text-start">
                           <label class="form-label">Observaciones</label>
                           <div class="form-floating">
                             <textarea
@@ -392,19 +412,6 @@
         </div>
       </div>
     </div>
-    <div class="mb-3">
-      <label for="formFile" class="form-label"
-        >Añade una imagen de evidencia</label
-      >
-      <input
-        class="form-control"
-        accept="image/*"
-        capture="camera"
-        type="file"
-        id="camera"
-      />
-    </div>
-    <img style="max-width: 400px" id="photo" class="photo" />
   </div>
 </template>
 <script>
@@ -427,11 +434,6 @@ export default {
   },
   methods: {
     getHoteles() {
-      const photo = document.querySelector("#photo");
-      const camera = document.querySelector("#camera");
-      camera.addEventListener("change", function (e) {
-        photo.src = URL.createObjectURL(e.target.files[0]);
-      });
       axios
         .get("getHoteles?api_key=" + this.$store.state.api_key)
         .then((res) => {
@@ -478,20 +480,34 @@ export default {
           this.checklistVes = res.data.checklistVes;
         });
     },
+    mostrarImg() {
+      this.items.forEach((element) => {
+        const imagen = document.querySelector("#imagen" + element.id);
+        const evidencia = document.querySelector("#evidencia" + element.id);
+        if (evidencia.files[0]) {
+          imagen.src = URL.createObjectURL(evidencia.files[0]);
+        }
+      });
+    },
     guardar() {
       let chequeos = [];
       this.items.forEach((element) => {
+        const evidencia = document.querySelector("#evidencia" + element.id);
+        const img = evidencia.files[0];
         chequeos.push({
           cat_hotel_id: element.cat_hotel_id,
           item_id: element.id,
           usuario_id: this.$store.state.user.id,
           estado: this.estado[element.id],
           observaciones: this.observaciones[element.id],
+          evidencia: img,
           turno: this.turno[element.id],
         });
       });
+      console.log(chequeos);
       axios
         .post("storeChecklist?api_key=" + this.$store.state.api_key, {
+          headers: { "Content-Type": "multipart/form-data" },
           chequeos,
         })
         .then((res) => {
@@ -501,10 +517,10 @@ export default {
             this.observaciones = {};
             this.turno = {};
             console.log(res.data.item[0].item);
-            console.log(res.data.message);
+            console.log(res.data);
             this.getChecklist();
           } else {
-            console.log(res.data.message);
+            console.log(res.data);
             this.getChecklist();
           }
         });

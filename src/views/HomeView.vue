@@ -19,10 +19,7 @@
             <img
               class="card-img-top"
               style="max-width: 400px"
-              :src="
-                'http://127.0.0.1/storage/app/public/' +
-                $store.state.user.hotel.logo
-              "
+              :src="'http://localhost/image/ocean.png'"
               alt="Ocean by H10"
             />
             <hr />
@@ -57,20 +54,10 @@
                 "
               >
                 <img
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOCAE382KD8n6GvWWl72LzQLGbmoT8rTBPHw&usqp=CAU"
+                  :src="'http://localhost/image/Checklist.png'"
                   class="img-fluid rounded-center"
                   alt="Checklist"
                 />
-                <p class="card-text">
-                  {{
-                    $store.state.lang.prefijo == "es"
-                      ? "Actualizado el: "
-                      : "Updated at: "
-                  }}<br />
-                  <small v-if="ultimo" class="text-muted">{{
-                    ultimo.created_at
-                  }}</small>
-                </p>
               </div>
               <div class="col-6">
                 <p class="card-text">
@@ -102,7 +89,19 @@
                     $store.state.lang.prefijo == "es"
                       ? "No Completado: "
                       : "Not Completed: "
-                  }}<b>{{ nocompletado }}</b>
+                  }}<b class="text-primary">{{ nocompletado }}</b>
+                </p>
+                <p class="card-text">
+                  <b>
+                    {{
+                      $store.state.lang.prefijo == "es"
+                        ? "Actualizado: "
+                        : "Updated at: "
+                    }}</b
+                  ><br />
+                  <small v-if="ultimo" class="text-muted">{{
+                    ultimo.created_at
+                  }}</small>
                 </p>
               </div>
             </div>

@@ -392,7 +392,6 @@
         </div>
       </div>
     </div>
-    <!--
     <div class="mb-3">
       <label for="formFile" class="form-label"
         >Añade una imagen de evidencia</label
@@ -405,7 +404,7 @@
         id="camera"
       />
     </div>
-    <img style="max-width: 400px" id="photo" class="photo" />-->
+    <img style="max-width: 400px" id="photo" class="photo" />
   </div>
 </template>
 <script>
@@ -428,11 +427,11 @@ export default {
   },
   methods: {
     getHoteles() {
-      //const photo = document.querySelector("#photo");
-      //const camera = document.querySelector("#camera");
-      //camera.addEventListener("change", function (e) {
-      //  photo.src = URL.createObjectURL(e.target.files[0]);
-      //});
+      const photo = document.querySelector("#photo");
+      const camera = document.querySelector("#camera");
+      camera.addEventListener("change", function (e) {
+        photo.src = URL.createObjectURL(e.target.files[0]);
+      });
       axios
         .get("getHoteles?api_key=" + this.$store.state.api_key)
         .then((res) => {

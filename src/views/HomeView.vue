@@ -67,7 +67,9 @@
                       ? "Actualizado el: "
                       : "Updated at: "
                   }}<br />
-                  <small class="text-muted">{{ ultimo.created_at }}</small>
+                  <small v-if="ultimo" class="text-muted">{{
+                    ultimo.created_at
+                  }}</small>
                 </p>
               </div>
               <div class="col-6">
@@ -136,10 +138,14 @@
           <div class="card-body">
             <h5 class="card-title">{{ $store.state.user.nombre_completo }}</h5>
             <p class="card-text">
-              {{ $store.state.user.hotel.siglas }} <br />{{
-                $store.state.user.puestos.departamento.nombre
+              {{
+                $store.state.user.hotel.siglas +
+                " - " +
+                $store.state.user.roles.nombre
               }}
-              <br />{{ $store.state.user.puestos.nombre }}
+              <br />{{ $store.state.user.puestos.departamento.nombre }} <br />{{
+                $store.state.user.puestos.nombre
+              }}
             </p>
           </div>
         </div>

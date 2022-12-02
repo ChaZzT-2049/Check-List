@@ -245,13 +245,6 @@
                     <div class="card header">
                       <h2>{{ item.item }}</h2>
                     </div>
-                    <select
-                      style="display: none"
-                      class="hidden"
-                      v-model="chequeo.item_id"
-                    >
-                      <option :value="item.id">{{ item.id }}</option>
-                    </select>
                     <div class="card-body">
                       <b class="card-title text-muted">{{
                         item.descripcion
@@ -259,25 +252,34 @@
                       <form>
                         <div class="mb-3 text-start">
                           <label class="form-label">Turno</label>
-                          <select
-                            class="form-select"
-                            :id="'turno' + item.id"
-                            aria-label="Disabled select example"
-                            disabled
-                          >
-                            <option value="Matutino">Matutino</option>
-                            <option value="Vespertino">Vespertino</option>
-                          </select>
+                          <div class="form-floating">
+                            <select
+                              required
+                              v-model="turno[item.id]"
+                              class="form-select"
+                              :id="'turno' + item.id"
+                              aria-label="Default select example"
+                            >
+                              <option value="Matutino">Matutino</option>
+                              <option value="Vespertino">Vespertino</option>
+                            </select>
+                            <label :for="'turno' + item.id"
+                              >Elige un turno</label
+                            >
+                          </div>
                         </div>
                         <div class="mb-3 text-start">
                           <label class="form-label">Estado</label>
                           <div class="form-check">
                             <input
+                              v-model="estado[item.id]"
                               type="radio"
                               class="btn-check"
-                              name="options-outlined"
+                              name="estado"
                               :id="'ok' + item.id"
                               autocomplete="off"
+                              value="OK"
+                              required
                             />
                             <label
                               style="margin: 2px"
@@ -287,11 +289,14 @@
                             >
 
                             <input
+                              v-model="estado[item.id]"
                               type="radio"
                               class="btn-check"
-                              name="options-outlined"
+                              name="estado"
                               :id="'fallando' + item.id"
                               autocomplete="off"
+                              value="Fallando"
+                              required
                             />
                             <label
                               style="margin: 2px"
@@ -301,11 +306,14 @@
                             >
 
                             <input
+                              v-model="estado[item.id]"
                               type="radio"
                               class="btn-check"
-                              name="options-outlined"
+                              name="estado"
                               :id="'nocom' + item.id"
                               autocomplete="off"
+                              value="No Completado"
+                              required
                             />
                             <label
                               style="margin: 2px"
@@ -319,12 +327,16 @@
                           <label class="form-label">Observaciones</label>
                           <div class="form-floating">
                             <textarea
+                              v-model="observaciones[item.id]"
                               class="form-control"
                               placeholder="Leave a comment here"
-                              id="observaciones1"
+                              :id="'observaciones' + item.id"
                               style="height: 100px"
+                              required
                             ></textarea>
-                            <label class="text-muted" for="observaciones"
+                            <label
+                              class="text-muted"
+                              :for="'observaciones' + item.id"
                               ><small>Escribir Observaciones</small></label
                             >
                           </div>
@@ -380,6 +392,20 @@
         </div>
       </div>
     </div>
+    <!--
+    <div class="mb-3">
+      <label for="formFile" class="form-label"
+        >Añade una imagen de evidencia</label
+      >
+      <input
+        class="form-control"
+        accept="image/*"
+        capture="camera"
+        type="file"
+        id="camera"
+      />
+    </div>
+    <img style="max-width: 400px" id="photo" class="photo" />-->
   </div>
 </template>
 <script>
@@ -393,15 +419,20 @@ export default {
     checklistMat: "",
     checklistVes: "",
     fecha: "",
-    chequeo: {
-      item_id: "",
-    },
+    estado: {},
+    observaciones: {},
+    turno: {},
   }),
   mounted: function () {
     this.getHoteles();
   },
   methods: {
     getHoteles() {
+      //const photo = document.querySelector("#photo");
+      //const camera = document.querySelector("#camera");
+      //camera.addEventListener("change", function (e) {
+      //  photo.src = URL.createObjectURL(e.target.files[0]);
+      //});
       axios
         .get("getHoteles?api_key=" + this.$store.state.api_key)
         .then((res) => {
@@ -425,6 +456,14 @@ export default {
           .then((res) => {
             this.items = res.data.items;
             this.getChecklist();
+            this.estado = {};
+            this.observaciones = {};
+            this.turno = {};
+            this.items.forEach((element) => {
+              this.estado[element.id] = null;
+              this.observaciones[element.id] = null;
+              this.turno[element.id] = null;
+            });
           });
         document.getElementById("componente").style.display = "inline";
       }
@@ -441,7 +480,35 @@ export default {
         });
     },
     guardar() {
-      console.log(this.chequeo.item_id);
+      let chequeos = [];
+      this.items.forEach((element) => {
+        chequeos.push({
+          cat_hotel_id: element.cat_hotel_id,
+          item_id: element.id,
+          usuario_id: this.$store.state.user.id,
+          estado: this.estado[element.id],
+          observaciones: this.observaciones[element.id],
+          turno: this.turno[element.id],
+        });
+      });
+      axios
+        .post("storeChecklist?api_key=" + this.$store.state.api_key, {
+          chequeos,
+        })
+        .then((res) => {
+          if (res.data.error == true) {
+            chequeos = [];
+            this.estado = {};
+            this.observaciones = {};
+            this.turno = {};
+            console.log(res.data.item[0].item);
+            console.log(res.data.message);
+            this.getChecklist();
+          } else {
+            console.log(res.data.message);
+            this.getChecklist();
+          }
+        });
     },
   },
 };

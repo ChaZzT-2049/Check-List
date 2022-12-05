@@ -1,6 +1,6 @@
 <template>
   <div
-    style="padding: 10px; margin-bottom: 80px; max-width: 1300px"
+    style="padding: 10px; margin-bottom: 80px; max-width: 900px"
     class="container-fluid mh-100"
   >
     <div class="card text-center">

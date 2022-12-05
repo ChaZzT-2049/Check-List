@@ -3,7 +3,7 @@ import Vue from "vue";
 
 import axios from "axios";
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "https://172.40.47.214/api/";
+axios.defaults.baseURL = "http://127.0.0.1/api/";
 
 Vue.use(Vuex);
 

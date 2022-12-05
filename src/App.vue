@@ -227,8 +227,8 @@
 <script>
 export default {
   data: () => ({
-    username: "sroot",
-    password: "12345678",
+    username: "",
+    password: "",
   }),
   methods: {
     login() {

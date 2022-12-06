@@ -35,8 +35,8 @@
           <h4 class="card-header bg-primary text-light">
             {{
               $store.state.lang.prefijo == "es"
-                ? $store.state.user.hotel.siglas + " Check List Hoy "
-                : $store.state.user.hotel.siglas + " Today Check List"
+                ? $store.state.user.hotel.siglas + " Resumen de Hoy "
+                : $store.state.user.hotel.siglas + " Today Sumary"
             }}
           </h4>
           <div
@@ -61,20 +61,12 @@
               </div>
               <div class="col-6">
                 <p class="card-text">
-                  <b>{{
+                  <b>Check Lists: </b>{{ checklist }}<br /><b>{{
                     $store.state.lang.prefijo == "es"
-                      ? "Actividades: "
-                      : "Activities: "
+                      ? "Act Realizadas: "
+                      : "Act Performed: "
                   }}</b
-                  >{{ actividades }}<br /><b>{{
-                    $store.state.lang.prefijo == "es"
-                      ? "Realizadas: "
-                      : "Performed: "
-                  }}</b
-                  >{{ hotelchecklist }}<br /><b>{{
-                    $store.state.lang.prefijo == "es" ? "Estado: " : "Status: "
-                  }}</b
-                  >{{ porcentaje }}%
+                  >{{ hotelchequeos }}<br />
                 </p>
                 <p class="card-text">
                   OK: <b class="text-success">{{ ok }}</b
@@ -157,8 +149,8 @@
 import axios from "axios";
 export default {
   data: () => ({
-    actividades: "",
-    hotelchecklist: "",
+    checklist: "",
+    hotelchequeos: "",
     porcentaje: "",
     ok: "",
     fallando: "",
@@ -175,9 +167,8 @@ export default {
           id: this.$store.state.user.hotel.id,
         })
         .then((res) => {
-          this.actividades = res.data.hotelitems;
-          this.hotelchecklist = res.data.hotelchecklist;
-          this.porcentaje = res.data.porcentaje;
+          this.checklist = res.data.hotelchecklist;
+          this.hotelchequeos = res.data.hotelchequeos;
           this.ok = res.data.ok;
           this.fallando = res.data.fallando;
           this.nocompletado = res.data.nocompletado;

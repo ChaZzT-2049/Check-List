@@ -50,6 +50,19 @@ export default new Vuex.Store({
           this.commit("SET_USER", null);
         }
         if (res.data.login == true) {
+          window.$("#titulo").empty();
+          window.$("#mensaje").empty();
+
+          window.$("#toast").toggleClass("show");
+          window
+            .$("#titulo")
+            .append("Bienvenido, " + res.data.user.nombre_completo);
+          window.$("#mensaje").append("Sesion Iniciada Con Exito");
+
+          setTimeout(function () {
+            window.$("#toast").toggleClass("show");
+          }, 1500);
+
           this.commit("SET_USER", res.data.user);
           this.commit("SET_LANG", res.data.lang);
           this.commit("SET_DATE", res.data.hoy);
@@ -58,8 +71,18 @@ export default new Vuex.Store({
     },
     logout() {
       axios.post("logoutapp").then((res) => {
-        console.log(res.data.message);
         this.commit("SET_USER", null);
+
+        window.$("#titulo").empty();
+        window.$("#mensaje").empty();
+
+        window.$("#toast").toggleClass("show");
+        window.$("#titulo").append("Hasta Luego");
+        window.$("#mensaje").append(res.data.message);
+
+        setTimeout(function () {
+          window.$("#toast").toggleClass("show");
+        }, 1500);
       });
     },
   },

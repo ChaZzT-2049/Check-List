@@ -5,7 +5,8 @@ urlsToCache = [
     'favicon.ico',
     'script.js',
     'img/icons/android-icon-192x192.png',
-    'img/icons/apple-icon.png'
+    'img/icons/apple-icon.png',
+    '../src/App.vue'
 ]
 
 self.addEventListener('install', event =>{

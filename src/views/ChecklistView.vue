@@ -20,11 +20,11 @@
               >
               <div class="form-floating">
                 <select
-                  v-model="filtroHotel"
+                  v-model="filtro_Hotel"
                   class="form-select"
                   id="floatingSelect"
                   aria-label="Floating label select example"
-                  @change="getItems(filtroHotel)"
+                  @change="getChecklists(filtro_Hotel)"
                 >
                   <option
                     v-for="hotel in hoteles"
@@ -45,24 +45,76 @@
         </div>
         <hr />
         <div id="componente" style="display: none">
-          <h1>{{ Hotelselected.nombre }}</h1>
-          <button
-            v-if="items.length > 0"
-            style="margin: 10px"
-            type="button"
-            class="btn btn-primary"
-            data-bs-toggle="modal"
-            data-bs-target="#exampleModal"
+          <h1 class="text-center">{{ Hotelselected.nombre }}</h1>
+          <hr />
+          <div v-show="checklists.length > 0" class="mb-3 text-start">
+            <h3 class="header">Realizar Chequeo</h3>
+            <div class="row">
+              <div class="col-6 col-sm-8">
+                <label class="form-label"
+                  ><b>{{
+                    $store.state.lang.prefijo == "es"
+                      ? "Selecciona una Lista"
+                      : "Select a Check List"
+                  }}</b></label
+                >
+                <div class="form-floating">
+                  <select
+                    v-model="filtro_checklist"
+                    class="form-select"
+                    id="floatingSelect"
+                    aria-label="Floating label select example"
+                    @change="getItems(filtro_checklist)"
+                  >
+                    <option
+                      v-for="checklist in checklists"
+                      :key="checklist.id"
+                      :value="checklist.id"
+                    >
+                      {{ checklist.checklist }}
+                    </option>
+                  </select>
+                  <label for="floatingSelect">{{
+                    $store.state.lang.prefijo == "es"
+                      ? "Elige un Check List"
+                      : "Choose a Check List"
+                  }}</label>
+                </div>
+              </div>
+              <div id="boton" class="col-6 col-sm-4" style="display: none">
+                <label class="form-label"
+                  ><b>{{
+                    $store.state.lang.prefijo == "es"
+                      ? "Realizar Chequeo"
+                      : "Perform Check"
+                  }}</b></label
+                ><br />
+                <button
+                  style="margin: 10px"
+                  type="button"
+                  class="btn btn-primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal"
+                >
+                  {{
+                    $store.state.lang.prefijo == "es"
+                      ? "Comprobar"
+                      : "Perform Check"
+                  }}
+                </button>
+              </div>
+              <div id="noboton" class="col-6 col-sm-4" style="display: none">
+                <small>Este Check List no tiene Items</small>
+              </div>
+            </div>
+          </div>
+          <small v-show="checklists.length == 0"
+            >{{ Hotelselected.siglas }} No tiene Check Lists</small
           >
-            {{
-              $store.state.lang.prefijo == "es"
-                ? "Realizar Check List"
-                : "Perform Check List"
-            }}
-          </button>
-          <div class="card">
+          <hr />
+          <div class="card" v-show="checklists.length > 0">
             <h4 class="card-header text-start">
-              Check List
+              Listas de Comprobación
               {{ Hotelselected.siglas }}
             </h4>
             <div class="card-body">
@@ -81,70 +133,78 @@
                     type="date"
                     name="fecha"
                     id="fecha"
-                    @change="getChecklist()"
+                    @change="getChequeos()"
                   />
                 </div>
               </form>
-              <h4 class="card-title">Chequeos Realizados el {{ fecha }}</h4>
+              <h4 class="card-title">Check List Realizados el {{ fecha }}</h4>
               <hr />
               <div class="bg-primary"><h2 class="text-light">Matutino</h2></div>
               <hr />
-              <div class="row row-cols-1 row-cols-md-3 g-4">
+              <div class="row row-cols-1 row-cols-md-2 g-4">
                 <div
                   class="col"
-                  v-for="checklistm in checklistMat"
-                  :key="checklistm.id"
+                  v-for="checklist in checklists"
+                  :key="checklist.id"
                 >
                   <div class="card text">
-                    <div class="text-center">
-                      <img
-                        style="padding: 10px; max-width: 150px"
-                        :src="
-                          'http://localhost/storage/' + checklistm.evidencia
-                        "
-                        class="card-img-top"
-                        alt=""
-                      />
-                    </div>
                     <div class="card-header text-start border">
-                      <h4>{{ checklistm.item }}</h4>
+                      <h4>Check List {{ checklist.checklist }}</h4>
                     </div>
                     <div class="card-body">
-                      <h4 class="card-title text-muted">
-                        Estado:
-                        <b
-                          v-if="checklistm.estado == 'OK'"
-                          class="text-success"
-                          >{{ checklistm.estado }}</b
-                        >
-                        <b
-                          v-if="checklistm.estado == 'Fallando'"
-                          class="text-danger"
-                          >{{ checklistm.estado }}</b
-                        >
-                        <b
-                          v-if="checklistm.estado == 'No Completado'"
-                          class="text-primary"
-                          >{{ checklistm.estado }}</b
-                        >
-                      </h4>
-                      <p class="card-text text-start">
-                        <b>Observaciones: </b>{{ checklistm.observaciones
-                        }}<br /><b>Tecnico: </b
-                        >{{ checklistm.nombres + " " + checklistm.apellidos
-                        }}<br /><b>Turno: </b>Matutino
-                      </p>
-                    </div>
-                    <div class="card-footer text-muted">
-                      Realizado el: {{ checklistm.created_at }}
-                    </div>
-                    <div class="card-footer text-muted">
-                      Actualizado el: {{ checklistm.updated_at }}
+                      <div v-for="chequeom in chequeosMat" :key="chequeom.id">
+                        <div v-if="chequeom.checklist_id == checklist.id">
+                          <div class="text-center">
+                            <img
+                              style="padding: 10px; max-width: 150px"
+                              :src="
+                                'http://localhost/storage/' + chequeom.evidencia
+                              "
+                              class="card-img-top"
+                              alt=""
+                            />
+                          </div>
+                          <h4 class="card-title text-start">
+                            {{ chequeom.actividad }}
+                          </h4>
+                          <h5 class="text-muted">
+                            Estado:
+                            <b
+                              v-if="chequeom.estado == 'OK'"
+                              class="text-success"
+                              >{{ chequeom.estado }}</b
+                            >
+                            <b
+                              v-if="chequeom.estado == 'Fallando'"
+                              class="text-danger"
+                              >{{ chequeom.estado }}</b
+                            >
+                            <b
+                              v-if="chequeom.estado == 'No Completado'"
+                              class="text-primary"
+                              >{{ chequeom.estado }}</b
+                            >
+                          </h5>
+                          <p class="card-text text-start">
+                            <b>Observaciones: </b>{{ chequeom.observaciones
+                            }}<br /><b>Tecnico: </b
+                            >{{ chequeom.nombres + " " + chequeom.apellidos
+                            }}<br /><b>Turno: </b>Matutino
+                          </p>
+                          <div class="text-muted">
+                            Realizado el: {{ chequeom.created_at }}
+                          </div>
+                          <div class="text-muted">
+                            Actualizado el: {{ chequeom.updated_at }}
+                          </div>
+                          <hr />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div v-if="checklistMat.length == 0" style="padding: 10px">
+              <div v-if="chequeosMat.length == 0" style="padding: 10px">
                 <h4 class="text-muted">
                   No se ha realizado un Check List Matutino en
                   {{ Hotelselected.siglas + " el " + fecha }}
@@ -155,65 +215,70 @@
                 <h2 class="text-light">Vespertino</h2>
               </div>
               <hr />
-              <div class="row row-cols-1 row-cols-md-3 g-4">
+              <div class="row row-cols-1 row-cols-md-2 g-4">
                 <div
                   class="col"
-                  v-for="checklistv in checklistVes"
-                  :key="checklistv.id"
+                  v-for="checklist in checklists"
+                  :key="checklist.id"
                 >
                   <div class="card text">
-                    <div class="text-center">
-                      <img
-                        style="padding: 10px; max-width: 150px"
-                        :src="
-                          'http://localhost/storage/' + checklistm.evidencia
-                        "
-                        class="card-img-top"
-                        alt=""
-                      />
-                    </div>
                     <div class="card-header text-start border">
-                      <h4>{{ checklistv.item }}</h4>
+                      <h4>Check List {{ checklist.checklist }}</h4>
                     </div>
                     <div class="card-body">
-                      <h4 class="card-title text-muted">
-                        Estado:
-                        <b
-                          v-if="checklistv.estado == 'OK'"
-                          class="text-success"
-                          >{{ checklistv.estado }}</b
-                        >
-                        <b
-                          v-if="checklistv.estado == 'Fallando'"
-                          class="text-danger"
-                          >{{ checklistv.estado }}</b
-                        >
-                        <b
-                          v-if="checklistv.estado == 'No Completado'"
-                          class="text-primary"
-                          >{{ checklistv.estado }}</b
-                        >
-                      </h4>
-                      <p class="card-text text-start">
-                        <b>Observaciones: </b>{{ checklistv.observaciones
-                        }}<br /><b>Tecnico: </b
-                        >{{ checklistv.nombres + " " + checklistv.apellidos
-                        }}<br /><b>Turno: </b>Vespertino
-                      </p>
-                    </div>
-                    <div class="card-footer text-muted">
-                      Realizado el: {{ checklistv.created_at }}
-                    </div>
-                    <div
-                      v-if="checklistv.updated_at"
-                      class="card-footer text-muted"
-                    >
-                      Actualizado el: {{ checklistv.updated_at }}
+                      <div v-for="chequeov in chequeosVes" :key="chequeov.id">
+                        <div v-if="chequeov.checklist_id == checklist.id">
+                          <div class="text-center">
+                            <img
+                              style="padding: 10px; max-width: 150px"
+                              :src="
+                                'http://localhost/storage/' + chequeov.evidencia
+                              "
+                              class="card-img-top"
+                              alt=""
+                            />
+                          </div>
+                          <h4 class="card-title text-start">
+                            {{ chequeov.actividad }}
+                          </h4>
+                          <h5 class="text-muted">
+                            Estado:
+                            <b
+                              v-if="chequeov.estado == 'OK'"
+                              class="text-success"
+                              >{{ chequeov.estado }}</b
+                            >
+                            <b
+                              v-if="chequeov.estado == 'Fallando'"
+                              class="text-danger"
+                              >{{ chequeov.estado }}</b
+                            >
+                            <b
+                              v-if="chequeov.estado == 'No Completado'"
+                              class="text-primary"
+                              >{{ chequeov.estado }}</b
+                            >
+                          </h5>
+                          <p class="card-text text-start">
+                            <b>Observaciones: </b>{{ chequeov.observaciones
+                            }}<br /><b>Tecnico: </b
+                            >{{ chequeov.nombres + " " + chequeov.apellidos
+                            }}<br /><b>Turno: </b>Matutino
+                          </p>
+                          <div class="text-muted">
+                            Realizado el: {{ chequeov.created_at }}
+                          </div>
+                          <div class="text-muted">
+                            Actualizado el: {{ chequeov.updated_at }}
+                          </div>
+                          <hr />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div v-if="checklistVes.length == 0" style="padding: 10px">
+              <div v-if="chequeosVes.length == 0" style="padding: 10px">
                 <h4 class="text-muted">
                   No se ha realizado un Check List Vespertino en
                   {{ Hotelselected.siglas + " el " + fecha }}
@@ -236,7 +301,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h1 class="modal-title fs-5" id="exampleModalLabel">
-              Check List {{ Hotelselected.nombre }}
+              Check List {{ checklistselected.checklist }}
             </h1>
             <button
               type="button"
@@ -260,7 +325,7 @@
                 <div class="carousel-item" v-for="item in items" :key="item.id">
                   <div class="card text-center" style="margin-bottom: 10px">
                     <div class="card header">
-                      <h2>{{ item.item }}</h2>
+                      <h2>{{ item.actividad }}</h2>
                     </div>
                     <div class="card-body">
                       <b class="card-title text-muted">{{
@@ -438,12 +503,16 @@
 import axios from "axios";
 export default {
   data: () => ({
+    errores: [],
     hoteles: "",
-    filtroHotel: "",
+    filtro_Hotel: "",
+    filtro_checklist: "",
     Hotelselected: "",
+    checklistselected: "",
+    checklists: "",
     items: "",
-    checklistMat: "",
-    checklistVes: "",
+    chequeosMat: "",
+    chequeosVes: "",
     fecha: "",
     estado: {},
     observaciones: {},
@@ -461,13 +530,39 @@ export default {
           this.fecha = this.$store.state.hoy;
         });
     },
-    getItems(id) {
-      if (this.filtroHotel == undefined) {
+    getChecklists(id) {
+      if (this.filtro_Hotel == undefined) {
         document.getElementById("componente").style.display = "none";
       } else {
         this.hoteles.forEach((element) => {
-          if (element.id == this.filtroHotel) {
+          if (element.id == this.filtro_Hotel) {
             this.Hotelselected = element;
+          }
+        });
+        axios
+          .post("getChecklists?api_key=" + this.$store.state.api_key, {
+            id: id,
+          })
+          .then((res) => {
+            if (res.data.error == true) {
+              console.log(res.data.message);
+            } else {
+              this.checklists = res.data.checklists;
+              this.getChequeos();
+              document.getElementById("componente").style.display = "inline";
+            }
+          });
+      }
+    },
+    getItems(id) {
+      if (this.filtro_checklist != undefined) {
+        this.items = "";
+        this.estado = {};
+        this.observaciones = {};
+        this.turno = {};
+        this.checklists.forEach((element) => {
+          if (element.id == this.filtro_checklist) {
+            this.checklistselected = element;
           }
         });
         axios
@@ -475,29 +570,48 @@ export default {
             id: id,
           })
           .then((res) => {
-            this.items = res.data.items;
-            this.getChecklist();
-            this.estado = {};
-            this.observaciones = {};
-            this.turno = {};
-            this.items.forEach((element) => {
-              this.estado[element.id] = null;
-              this.observaciones[element.id] = null;
-              this.turno[element.id] = null;
-            });
+            if (res.data.error == true) {
+              document.getElementById("noboton").style.display = "inline";
+              document.getElementById("boton").style.display = "none";
+            } else {
+              document.getElementById("noboton").style.display = "none";
+              document.getElementById("boton").style.display = "inline";
+              this.items = res.data.items;
+              this.items.forEach((element) => {
+                this.estado[element.id] = "";
+                this.observaciones[element.id] = "";
+                this.turno[element.id] = "";
+              });
+            }
           });
-        document.getElementById("componente").style.display = "inline";
+      } else {
+        document.getElementById("boton").style.display = "none";
       }
     },
-    getChecklist() {
+    getChequeos() {
       axios
-        .post("getChecklist?api_key=" + this.$store.state.api_key, {
-          id: this.Hotelselected.id,
+        .post("getChequeos?api_key=" + this.$store.state.api_key, {
+          id: this.filtro_Hotel,
           fecha: this.fecha,
         })
         .then((res) => {
-          this.checklistMat = res.data.checklistMat;
-          this.checklistVes = res.data.checklistVes;
+          if (res.data.error == true) {
+            window.$("#titulo").empty();
+            window.$("#mensaje").empty();
+
+            window.$("#toast").toggleClass("show");
+            window.$("#titulo").append("Alerta");
+            window
+              .$("#mensaje")
+              .append(res.data.message + this.Hotelselected.siglas);
+
+            setTimeout(function () {
+              window.$("#toast").toggleClass("show");
+            }, 2000);
+          } else {
+            this.chequeosMat = res.data.chequeosMat;
+            this.chequeosVes = res.data.chequeosVes;
+          }
         });
     },
     mostrarImg() {
@@ -510,49 +624,63 @@ export default {
       });
     },
     guardar() {
+      this.errores = [];
       this.items.forEach((element) => {
         const evidencia = document.querySelector("#evidencia" + element.id);
         const imagen = document.querySelector("#imagen" + element.id);
         let data = new FormData(window.$("#saveForm" + element.id)[0]);
-        data.append("cat_hotel_id", element.cat_hotel_id);
         data.append("item_id", element.id);
         data.append("usuario_id", this.$store.state.user.id);
         data.append("estado", this.estado[element.id]);
         data.append("observaciones", this.observaciones[element.id]);
-        data.append("evidencia", evidencia.files[0]);
+        if (evidencia.files[0]) {
+          data.append("evidencia", evidencia.files[0]);
+        }
         data.append("turno", this.turno[element.id]);
         axios
-          .post("storeChecklist?api_key=" + this.$store.state.api_key, data, {
+          .post("storeCheck?api_key=" + this.$store.state.api_key, data, {
             headers: { "Content-Type": "multipart/form-data" },
           })
           .then((res) => {
             if (res.data.error == true) {
               data = null;
-              this.estado = {};
-              this.observaciones = {};
-              this.turno = {};
-              window.$("#ok" + element.id).prop("checked", false);
-              window.$("#fallando" + element.id).prop("checked", false);
-              window.$("#evidencia" + element.id).val("");
-              imagen.src = URL.revokeObjectURL("");
-              console.log(res.data.item[0].item);
-              console.log(res.data.message);
-              this.getChecklist();
-            } else {
-              data = null;
-              this.estado = {};
-              this.observaciones = {};
-              this.turno = {};
+              this.estado[element.id] = "";
+              this.observaciones[element.id] = "";
+              this.turno[element.id] = "";
               window.$("#ok" + element.id).prop("checked", false);
               window.$("#fallando" + element.id).prop("checked", false);
               window.$("#nocom" + element.id).prop("checked", false);
               window.$("#evidencia" + element.id).val("");
               imagen.src = URL.revokeObjectURL("");
-              console.log(res.data);
-              this.getChecklist();
+              this.errores.push({ actividad: res.data.item[0].actividad });
+              this.getChequeos();
+            } else {
+              data = null;
+              this.estado[element.id] = "";
+              this.observaciones[element.id] = "";
+              this.turno[element.id] = "";
+              window.$("#ok" + element.id).prop("checked", false);
+              window.$("#fallando" + element.id).prop("checked", false);
+              window.$("#nocom" + element.id).prop("checked", false);
+              window.$("#evidencia" + element.id).val("");
+              imagen.src = URL.revokeObjectURL("");
+              console.log(res.data.message);
+              this.getChequeos();
             }
           });
       });
+      if (this.errores) {
+        console.log(this.errores);
+        window.$("#tituloerror").empty();
+        window.$("#mensajeerror").empty();
+
+        window.$("#toasterror").toggleClass("show");
+        window.$("#tituloerror").append("Error");
+        window.$("#mensajeerror").append("Campos requeridos");
+        setTimeout(function () {
+          window.$("#toasterror").toggleClass("show");
+        }, 2000);
+      }
     },
   },
 };

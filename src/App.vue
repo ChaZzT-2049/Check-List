@@ -1,5 +1,62 @@
 <template>
   <div id="app">
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+      <div class="toast-container top-0 end-0 p-3">
+        <!-- Then put toasts within -->
+        <div
+          class="toast"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+          id="toast"
+        >
+          <div class="toast-header">
+            <img
+              src="https://res.cloudinary.com/itermotus/q_auto,h_45,dpr_2.0/assets/oceanhotels/logo.svg"
+              width="70"
+              height="35"
+              class="rounded me-2"
+              alt=""
+            />
+            <strong id="titulo" class="me-auto"></strong>
+            <small class="text-muted">Ahora</small>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div id="mensaje" class="toast-body"></div>
+        </div>
+        <div
+          class="toast"
+          role="alert"
+          aria-live="assertive"
+          aria-atomic="true"
+          id="toasterror"
+        >
+          <div class="toast-header">
+            <img
+              src="https://res.cloudinary.com/itermotus/q_auto,h_45,dpr_2.0/assets/oceanhotels/logo.svg"
+              width="70"
+              height="35"
+              class="rounded me-2"
+              alt=""
+            />
+            <strong id="tituloerror" class="me-auto"></strong>
+            <small class="text-muted">Ahora</small>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="toast"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div id="mensajeerror" class="toast-body"></div>
+        </div>
+      </div>
+    </div>
     <div v-if="$store.state.auth">
       <!--Navbar-->
       <nav class="sticky-top navbar navbar-expand-lg navbar-dark bg-primary">
@@ -151,7 +208,7 @@
           src="https://res.cloudinary.com/itermotus/q_auto,h_45,dpr_2.0/assets/oceanhotels/logo.svg"
           alt="Ocean by H10"
         />
-        <h1 class="text-primary">
+        <h1 class="text-secondary">
           {{
             $store.state.lang.prefijo == "es"
               ? "Sistemas Check List"

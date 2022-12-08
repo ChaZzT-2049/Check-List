@@ -57,7 +57,7 @@
         </div>
       </div>
     </div>
-    <div>
+    <div v-if="$store.state.auth">
       <!--Navbar-->
       <nav class="sticky-top navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
@@ -198,6 +198,7 @@
       <router-view />
     </div>
     <div
+      v-else
       style="padding: 20px; margin-bottom: 80px; max-width: 500px"
       class="container-fluid mh-100"
     >

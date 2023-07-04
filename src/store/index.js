@@ -15,7 +15,7 @@ export default new Vuex.Store({
     auth: false,
     titulo: "",
     inputs: "",
-    api_key: "key_cur_prod_Cr9NqVEqoQKhxDVtwEPT4xsUExgEV4vae",
+    api_key: "**************",
   },
   getters: {},
   mutations: {
